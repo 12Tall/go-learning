@@ -30,7 +30,9 @@ type ThreadEntry32 C.THREADENTRY32
 
 // CreateToolhelp32Snapshot 拍摄指定进程以及这些进程使用的堆，模块和线程的快照。
 func CreateToolhelp32Snapshot(dwFlags DwFlags, th32ProcessID DWord) Handle {
-	return Handle(C.CreateToolhelp32Snapshot(C.DWORD(dwFlags), C.DWORD(th32ProcessID)))
+	var handle Handle
+	handle.handle = C.CreateToolhelp32Snapshot(C.DWORD(dwFlags), C.DWORD(th32ProcessID))
+	return handle
 }
 
 // DwFlags 标志位
@@ -40,7 +42,7 @@ const (
 	// Th32csInherit 指示快照句柄是可继承的。
 	Th32csInherit DwFlags = 0x80000000
 	// Th32csSnapAll 包括系统中的所有进程和线程，以及th32ProcessID中指定的进程的堆和模块
-	Th32csSnapAll DwFlags = 0x80000000
+	Th32csSnapAll DwFlags = DwFlags(Th32csSnapHeapList | Th32csSnapModule | Th32csSnapProcess | Th32csSnapThread)
 	// Th32csSnapHeapList 包括系统中的所有进程和线程，以及th32ProcessID中指定的进程的堆和模块
 	Th32csSnapHeapList DwFlags = 0x00000001
 	// Th32csSnapModule 包括快照中th32ProcessID中指定的进程的所有模块
